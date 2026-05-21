@@ -9,5 +9,8 @@ public static class DependicyInjectionConfigurations
     {
         builder.Services.AddScoped<ICourseRepository, CourseRepository>();
         builder.Services.AddScoped<ICourseService, CourseService>();
+        builder.Services.AddScoped<IQuestionService, QuestionService>();
+        //builder.Services.AddScoped<IBaseRepository, BaseRepository>();
+        builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
     }
 }

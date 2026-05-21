@@ -19,20 +19,42 @@ public static class CourseMapper
         };
     }
 
-    public static CourseGetDto ToGetDto(this Course entity)
+    public static CourseGetDto ToGetDto(this Course course)
     {
-        return new CourseGetDto
+        var courseGetDto = new CourseGetDto
         {
-            CourseId = entity.CourseId,
-            Title = entity.Title,
-            Description = entity.Description,
-            Price = entity.Price,
-            CreatedAt = entity.CreatedAt,
-            IsActive = entity.IsActive,
-            DurationDays = entity.DurationDays,
-            AccessPeriodDays = entity.AccessPeriodDays,
-            Teachers = null,
-            Lessons = null
+            CourseId = course.CourseId,
+            Title = course.Title,
+            Description = course.Description,
+            Price = course.Price,
+            CreatedAt = course.CreatedAt,
+            IsActive = course.IsActive,
+            DurationDays = course.DurationDays,
+            AccessPeriodDays = course.AccessPeriodDays,
         };
+
+        if (course.Lessons != null)
+        {
+            courseGetDto.LessonGetDtos = course.Lessons.Select(lesson => new LessonGetDto
+            {
+                LessonId = lesson.LessonId,
+                Title = lesson.Title,
+                Content = lesson.Content,
+                Order = lesson.Order,
+                Duration = lesson.Duration
+            }).ToList();
+        }
+
+        if (course.TeacherCourses != null)
+        {
+            courseGetDto.TeacherGetDtos = course.TeacherCourses.Select(tc => new TeacherGetDto
+            {
+                TeacherId = tc.TeacherId,
+                FirstName = tc.Teacher.FirstName,
+                LastName = tc.Teacher.LastName,
+            }).ToList();
+        }
+
+        return courseGetDto;
     }
 }

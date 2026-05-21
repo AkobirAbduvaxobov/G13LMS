@@ -1,6 +1,5 @@
 ﻿using LMSPro.Api.Dtos;
 using LMSPro.Api.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMSPro.Api.Controllers;
@@ -30,4 +29,22 @@ public class CoursesController : ControllerBase
         return courses;
     }
 
+    [HttpGet("{id}")]
+    public async Task<CourseGetDto> GetById(long id)
+    {
+        var course = await CourseService.GetByIdAsync(id);
+        return course;
+    }
+
+    [HttpDelete("{id}")]
+    public async Task DeleteCourse(long id)
+    {
+        await CourseService.DeleteAsync(id);
+    }
+
+    [HttpPut("{id}")]
+    public async Task UpdateCourse(long id, CourseUpdateDto courseUpdateDto)
+    {
+        await CourseService.UpdateAsync(id, courseUpdateDto);
+    }
 }

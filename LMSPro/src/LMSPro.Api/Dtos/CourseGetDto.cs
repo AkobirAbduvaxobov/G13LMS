@@ -12,8 +12,9 @@ public class CourseGetDto
     public int DurationDays { get; set; }
     public int AccessPeriodDays { get; set; }
     public bool IsActive { get; set; }
+    public int EnrollmentCount { get; set; }
 
     // Navigation Properties
-    public ICollection<TeacherGetDto>? Teachers { get; set; }
-    public ICollection<LessonGetDto>? Lessons { get; set; }
+    public ICollection<TeacherGetDto>? TeacherGetDtos { get; set; }
+    public ICollection<LessonGetDto>? LessonGetDtos { get; set; }
 }

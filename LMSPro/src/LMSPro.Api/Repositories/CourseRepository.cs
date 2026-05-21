@@ -33,13 +33,13 @@ public class CourseRepository : ICourseRepository
         return DbContext.Courses;
     }
 
-    public async Task<Course?> GetByIdAsync(long courseId)
-    {
-        var course = await DbContext.Courses
-            .FirstOrDefaultAsync(x => x.CourseId == courseId);
+    //public async Task<Course?> GetByIdAsync(long courseId)
+    //{
+    //    var course = await DbContext.Courses
+    //        .FirstOrDefaultAsync(x => x.CourseId == courseId);
 
-        return course;
-    }
+    //    return course;
+    //}
 
     public async Task SaveChangesAsync()
     {
