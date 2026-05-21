@@ -20,7 +20,12 @@ public class CourseRepository : ICourseRepository
 
     public void Delete(Course course)
     {
-        DbContext.Courses.Remove(course);
+        //DbContext.Courses.Remove(course);
+        if(DbContext.Entry(course).State != EntityState.Deleted)
+        {
+            DbContext.Entry(course).State = EntityState.Deleted;
+        }
+        
     }
 
     public async Task<IEnumerable<Course>> GetAllAsync()
