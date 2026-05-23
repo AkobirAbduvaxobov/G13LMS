@@ -21,6 +21,7 @@ public class Program
         builder.ConfigureDB();
         builder.ConfigureDI();
 
+        // My test comment
 
         var app = builder.Build();
 
