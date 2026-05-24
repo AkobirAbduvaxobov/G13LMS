@@ -43,7 +43,7 @@ public class Program
         // salom
 
 
-
+// Yomg'ir yog'di mayda maydalab 
 
 
         // hello
