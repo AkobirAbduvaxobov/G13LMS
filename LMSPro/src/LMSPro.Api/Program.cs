@@ -43,17 +43,20 @@ public class Program
         // salom
 
 
+// Yomg'ir yog'di mayda maydalab 
+        //testing
 
 
 
         // Miryoqub akam legenda
+        // privet
+        // privet
         // hello
         // hello
         // hello
         // hello
         // hello
-        // hello
-        // hello
+        // privet
         // hello
 
         // My test comment elshodni cometi
