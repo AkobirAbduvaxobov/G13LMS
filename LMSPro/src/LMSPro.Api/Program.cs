@@ -46,7 +46,7 @@ public class Program
 
 
 
-        // hello
+        // Miryoqub akam legenda
         // hello
         // hello
         // hello
