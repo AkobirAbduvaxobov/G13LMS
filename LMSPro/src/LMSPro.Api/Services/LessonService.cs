@@ -46,5 +46,7 @@ public class LessonService : ILessonService
                 break;
             }
         }
+        if (skip < 0) skip = 0;
+        if (take > 20) take = 20;
     }
 }
