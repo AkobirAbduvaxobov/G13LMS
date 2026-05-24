@@ -21,42 +21,7 @@ public class Program
         builder.ConfigureDB();
         builder.ConfigureDI();
 
-        // My test comment
-        // My test comment
-        // My test comment
-        // My test comment
-        // My test comment
-        // My test comment
-        // My coder
-        // My coder
-        // My coder
-        // My test comment
-        // My test comment
-        // My test comment
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-
-        //testing
-
-
-
-        // hello
-        // hello
-        // hello
-        // hello
-        // hello
-        // hello
-        // hello
-        // hello
-        // hello
-
-        // My test comment elshodni cometi
+       
         var app = builder.Build();
 
         //using (var scope = app.Services.CreateScope())
