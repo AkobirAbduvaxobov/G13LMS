@@ -28,25 +28,4 @@ public class LessonService : ILessonService
     {
         throw new NotImplementedException();
     }
-
-    private void ValidatePaginationParameters(ref int skip, ref int take)
-    {
-        var res = skip + take;
-        while (true)
-        {
-            if (skip < 0) skip = 0;
-            if (take > 20) take = 20;
-            if (res > 20)
-            {
-                take = 20 - skip;
-                res = skip + take;
-            }
-            else
-            {
-                break;
-            }
-        }
-        if (skip < 0) skip = 0;
-        if (take > 20) take = 20;
-    }
 }
