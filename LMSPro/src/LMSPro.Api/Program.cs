@@ -46,14 +46,14 @@ public class Program
 
 
 
+        // privet
+        // privet
         // hello
         // hello
         // hello
         // hello
         // hello
-        // hello
-        // hello
-        // hello
+        // privet
         // hello
 
         // My test comment elshodni cometi
