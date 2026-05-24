@@ -24,7 +24,7 @@ public class Program
         // My test comment
         // My test comment
         // My test comment
-
+        // My test comment elshodni cometi
         var app = builder.Build();
 
         //using (var scope = app.Services.CreateScope())
