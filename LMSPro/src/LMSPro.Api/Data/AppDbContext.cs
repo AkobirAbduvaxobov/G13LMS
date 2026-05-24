@@ -21,7 +21,10 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
-    // sdfgsfgjfghjkghj test 
+    //  test
+    //  test 
+    //  test uchun 
+    // branchga  yozildi
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
