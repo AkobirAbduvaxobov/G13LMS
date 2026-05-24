@@ -24,6 +24,11 @@ public class Program
         // My test comment
         // My test comment
         // My test comment
+        // My test comment
+        // My test comment
+        // My test comment
+        // My test comment
+        // My test comment
 
         var app = builder.Build();
 
