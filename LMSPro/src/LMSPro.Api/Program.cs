@@ -42,6 +42,8 @@ public class Program
         // salom
         // salom
 
+
+// Yomg'ir yog'di mayda maydalab 
         //testing
 
 
