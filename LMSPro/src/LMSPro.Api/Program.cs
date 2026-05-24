@@ -24,6 +24,7 @@ public class Program
         // My test comment
         // My test comment
         // My test comment
+        // Bekzod's new comment
 
         var app = builder.Build();
 
