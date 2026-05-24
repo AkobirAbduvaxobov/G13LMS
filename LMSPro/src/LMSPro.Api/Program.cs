@@ -22,6 +22,8 @@ public class Program
         builder.ConfigureDI();
 
         // My test comment
+        // My test comment
+        // My test comment
 
         var app = builder.Build();
 
