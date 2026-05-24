@@ -56,6 +56,7 @@ public class Program
         // hello
         // hello
 
+        // My test comment elshodni cometi
         var app = builder.Build();
 
         //using (var scope = app.Services.CreateScope())
