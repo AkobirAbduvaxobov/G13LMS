@@ -21,44 +21,7 @@ public class Program
         builder.ConfigureDB();
         builder.ConfigureDI();
 
-        // My test comment
-        // My test comment
-        // My test comment
-        // My test comment
-        // My test comment
-        // My test comment
-        // My coder
-        // My coder
-        // My coder
-        // My test comment
-        // My test comment
-        // My test comment
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-        // salom
-
-
-// Yomg'ir yog'di mayda maydalab 
-        //testing
-
-
-
-        // privet
-        // privet
-        // hello
-        // hello
-        // hello
-        // hello
-        // hello
-        // privet
-        // hello
-
-        // My test comment elshodni cometi
+       
         var app = builder.Build();
 
         //using (var scope = app.Services.CreateScope())
