@@ -21,7 +21,7 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
-
+    // sdfgsfgjfghjkghj test 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
