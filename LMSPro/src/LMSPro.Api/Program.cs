@@ -21,6 +21,12 @@ public class Program
         builder.ConfigureDB();
         builder.ConfigureDI();
 
+
+        // salom danagasalar
+        // salom danagasalar
+        // salom danagasalar
+        // salom danagasalar
+
        
         var app = builder.Build();
 
