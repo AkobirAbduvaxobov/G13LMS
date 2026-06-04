@@ -16,7 +16,22 @@ public class LessonService : ILessonService
 
     public async Task<long> CreateAsync(LessonCreateDto lessonCreateDto)
     {
-        throw new NotImplementedException();
+       if (string.IsNullOrWhiteSpace(lessonCreateDto.Title))
+            throw new Exception("Title is required");
+
+        var lessonEntity = new Lesson
+        {
+            Title = lessonCreateDto.Title,
+            Content = lessonCreateDto.Content,
+            Order = lessonCreateDto.Order,
+            Duration = lessonCreateDto.Duration,
+            CourseId = lessonCreateDto.CourseId
+        };
+
+        await LessonRepository.AddAsync(lessonEntity);
+        await LessonRepository.SaveChangesAsync();
+
+        return lessonEntity.LessonId;
     }
 
     public async Task DeleteAsync(long lessonId)
