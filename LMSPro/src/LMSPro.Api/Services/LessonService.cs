@@ -1,17 +1,36 @@
 ﻿using LMSPro.Api.Dtos;
+using LMSPro.Api.Entities;
+using LMSPro.Api.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMSPro.Api.Services;
 
 public class LessonService : ILessonService
 {
-    public Task<long> CreateAsync(LessonCreateDto lessonCreateDto)
+    private readonly IBaseRepository<Lesson> LessonRepository;
+
+    public LessonService(IBaseRepository<Lesson> lessonRepository)
+    {
+        LessonRepository = lessonRepository;
+    }
+
+    public async Task<long> CreateAsync(LessonCreateDto lessonCreateDto)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(long lessonId)
+    public async Task DeleteAsync(long lessonId)
     {
-        throw new NotImplementedException();
+        var lessonEntity = await LessonRepository
+                            .GetAllQuery()
+                            .FirstOrDefaultAsync(c => c.LessonId == lessonId);
+        if (lessonEntity == null)
+        {
+            throw new Exception($"Course with ID {lessonId} not found to delete.");
+        }
+
+        LessonRepository.Delete(lessonEntity);
+        await LessonRepository.SaveChangesAsync();
     }
 
     public Task<PaginatedLessonDto> GetAllAsync(int skip, int take)
