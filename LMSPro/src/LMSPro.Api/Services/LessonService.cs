@@ -16,9 +16,6 @@ public class LessonService : ILessonService
 
     public async Task<long> CreateAsync(LessonCreateDto lessonCreateDto)
     {
-       if (string.IsNullOrWhiteSpace(lessonCreateDto.Title))
-            throw new Exception("Title is required");
-
         var lessonEntity = new Lesson
         {
             Title = lessonCreateDto.Title,

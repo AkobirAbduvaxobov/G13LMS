@@ -23,7 +23,7 @@ public class LessonsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<long> CreateAsync([FromBody] LessonCreateDto dto)
+    public async Task<long> CreateAsync(LessonCreateDto dto)
     {
         var lessonId = await LessonService.CreateAsync(dto);
         return lessonId;
