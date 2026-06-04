@@ -8,6 +8,6 @@ namespace LMSPro.Api.Repositories
         Task AddAsync(T t);
         void Update(T t);
         void Delete(T t);
-        Task SaveChangesAsync();
-    }
+        Task SaveChangesAsync();    
+    }   
 }
