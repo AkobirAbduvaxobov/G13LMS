@@ -43,9 +43,23 @@ public class LessonService : ILessonService
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
+    public async Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
     {
-        throw new NotImplementedException();
+        var lessonEntity = await LessonRepository
+            .GetAllQuery()
+            .FirstOrDefaultAsync(l => l.LessonId == lessonId);
+
+        if (lessonEntity == null)
+        {
+            throw new Exception($"Lesson with ID {lessonId} not found.");
+        }
+
+        lessonEntity.Title = lessonUpdateDto.Title;
+        lessonEntity.Content = lessonUpdateDto.Content;
+        lessonEntity.Order = lessonUpdateDto.Order;
+        lessonEntity.Duration = lessonUpdateDto.Duration;
+
+        await LessonRepository.SaveChangesAsync();
     }
 
     private void ValidatePaginationParameters(ref int skip, ref int take)
