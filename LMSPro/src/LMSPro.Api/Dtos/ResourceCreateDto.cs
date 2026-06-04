@@ -1,9 +1,7 @@
 ﻿namespace LMSPro.Api.Dtos;
 
-public class ResourceGetDto
+public class ResourceCreateDto
 {
-    public long ResourceId { get; set; }
-
     public string Name { get; set; }
 
     public string Url { get; set; }
