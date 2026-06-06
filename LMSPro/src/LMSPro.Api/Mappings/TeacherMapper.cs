@@ -15,7 +15,7 @@ public static class TeacherMapper
         };
     }
 
-    public static void UpdateEntity(this TeacherUpdateDto dto, Teacher teacher)
+    public static void ToUpdateEntity(this TeacherUpdateDto dto, Teacher teacher)
     {
         teacher.FirstName = dto.FirstName;
         teacher.LastName = dto.LastName;
