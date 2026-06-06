@@ -1,4 +1,5 @@
 # Ignore all bin/ and obj/ folders recursively
+**/Logs/*.txt
 **/[Bb]in/
 **/[Oo]bj/
 **/.vs/
