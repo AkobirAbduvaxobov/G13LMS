@@ -1,9 +1,7 @@
 ﻿namespace LMSPro.Api.Dtos;
 
-public class ResourceGetDto
+public class ResourceUpdateDto
 {
-    public long ResourceId { get; set; }
-
     public string Name { get; set; }
 
     public string Url { get; set; }
@@ -11,4 +9,4 @@ public class ResourceGetDto
     public string Type { get; set; }
 
     public long LessonId { get; set; }
-}
+}   
