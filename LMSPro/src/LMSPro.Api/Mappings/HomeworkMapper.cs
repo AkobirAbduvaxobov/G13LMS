@@ -23,7 +23,6 @@ public static class HomeworkMapper
 
         return res;
     }
-
     public static Homework ToEntity(this HomeworkCreateDto homeworkCreateDto)
     {
         return new Homework
@@ -33,12 +32,10 @@ public static class HomeworkMapper
             LessonId = homeworkCreateDto.LessonId
         };
     }
-
-    public static void ToUpdateEntity(this HomeworkUpdateDto homeworkUpdateDto, Homework homework)
+    public static void UpdateEntity(this HomeworkUpdateDto homeworkUpdateDto, Homework homework)
     {
         homework.Title = homeworkUpdateDto.Title;
         homework.Description = homeworkUpdateDto.Description;
-
-        
+        homework.LessonId = homeworkUpdateDto.LessonId;
     }
 }
