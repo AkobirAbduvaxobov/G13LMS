@@ -32,7 +32,7 @@ public static class HomeworkMapper
             LessonId = homeworkCreateDto.LessonId
         };
     }
-    public static void UpdateEntity(this HomeworkUpdateDto homeworkUpdateDto, Homework homework)
+    public static void ToUpdateEntity(this HomeworkUpdateDto homeworkUpdateDto, Homework homework)
     {
         homework.Title = homeworkUpdateDto.Title;
         homework.Description = homeworkUpdateDto.Description;
