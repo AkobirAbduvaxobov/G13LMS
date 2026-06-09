@@ -17,13 +17,26 @@ public static class EnrollmentMapper
 
     public static EnrollmentGetDto ToGetDto(this Enrollment enrollment)
     {
-        return new EnrollmentGetDto
+        var dto = new EnrollmentGetDto
         {
             EnrollmentId = enrollment.EnrollmentId,
             EnrolledAt = enrollment.EnrolledAt,
             StudentId = enrollment.StudentId,
             CourseId = enrollment.CourseId
         };
+
+        if (enrollment.Student != null)
+        {
+            dto.StudentFirstName = enrollment.Student.FirstName;
+            dto.StudentLastName = enrollment.Student.LastName;
+        }
+
+        if (enrollment.Course != null)
+        {
+            dto.CourseTitle = enrollment.Course.Title;
+        }
+
+        return dto;
     }
 
     public static void ToUpdateEntity(this EnrollmentUpdateDto dto, Enrollment enrollment)
