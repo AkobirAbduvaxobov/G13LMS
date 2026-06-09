@@ -48,6 +48,6 @@ public static class QuestionMapper
         question.VariantC = questionUpdateDto.VariantC;
         question.VariantD = questionUpdateDto.VariantD;
         question.Answer = questionUpdateDto.Answer;
-        question.LessonId = questionUpdateDto.LessonId;
+        // we don't update the LessonId because we don't want to allow changing the lesson of a question
     }
 }
