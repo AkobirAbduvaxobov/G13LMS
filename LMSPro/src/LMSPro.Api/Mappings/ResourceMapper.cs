@@ -28,7 +28,7 @@ public static class ResourceMapper
         };
     }
 
-    public static void UpdateEntity(
+    public static void ToUpdateEntity(
         this Resource resource,
         ResourceUpdateDto dto)
     {
