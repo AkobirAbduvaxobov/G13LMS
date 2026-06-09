@@ -2,7 +2,7 @@
 {
     public class PaginatedLessonDto
     {
-        public List<LessonGetDto> Data { get; set; } = new();
+        public required List<LessonGetDto> Data { get; set; }
         public int TotalCount { get; set; }
     }
 }
