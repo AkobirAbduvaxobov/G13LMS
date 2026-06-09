@@ -1,4 +1,4 @@
-﻿using LMSPro.Api.Dtos;
+using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
@@ -9,10 +9,14 @@ namespace LMSPro.Api.Services;
 public class QuestionService : IQuestionService
 {
     private readonly IBaseRepository<Question> QuestionRepository;
+    private readonly ILogger<QuestionService> _logger;
 
-    public QuestionService(IBaseRepository<Question> questionRepository)
+    public QuestionService(
+        IBaseRepository<Question> questionRepository,
+        ILogger<QuestionService> logger)
     {
         QuestionRepository = questionRepository;
+        _logger = logger;
     }
 
     public async Task<long> CreateAsync(QuestionCreateDto questionCreateDto)
@@ -31,6 +35,7 @@ public class QuestionService : IQuestionService
 
         if (question == null)
         {
+            _logger.LogWarning("Question with ID: {QuestionId} not found to delete", questionId);
             throw new Exception($"Question with ID {questionId} not found to delete.");
         }
 
@@ -68,6 +73,7 @@ public class QuestionService : IQuestionService
 
         if (question == null)
         {
+            _logger.LogWarning("Question with ID: {QuestionId} not found", questionId);
             throw new Exception($"Question with ID {questionId} not found.");
         }
 
@@ -83,6 +89,7 @@ public class QuestionService : IQuestionService
 
         if (question == null)
         {
+            _logger.LogWarning("Question with ID: {QuestionId} not found to update", questionId);
             throw new Exception($"Question with ID {questionId} not found to update.");
         }
 
