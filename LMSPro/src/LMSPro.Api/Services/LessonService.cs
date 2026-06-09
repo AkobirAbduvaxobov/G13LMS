@@ -33,9 +33,35 @@ public class LessonService : ILessonService
         await LessonRepository.SaveChangesAsync();
     }
 
-    public Task<PaginatedLessonDto> GetAllAsync(int skip, int take)
+    public async Task<PaginatedLessonDto> GetAllAsync(int skip, int take)
     {
-        throw new NotImplementedException();
+        ValidatePaginationParameters(ref skip, ref take);
+
+
+        var query = LessonRepository.GetAllQuery();
+
+
+        int totalCount = await query.CountAsync();
+
+
+        var lessons = await query
+            .Skip(skip)
+            .Take(take)
+            .Select(l => new LessonGetDto
+            {
+                LessonId = l.LessonId,
+                Title = l.Title,
+
+            })
+            .ToListAsync();
+
+
+        return new PaginatedLessonDto
+        {
+            Data = lessons,
+            TotalCount = totalCount
+        };
+
     }
 
     public Task<LessonGetDto> GetByIdAsync(long lessonId)
