@@ -4,6 +4,7 @@ using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Reflection.Metadata.Ecma335;
 
 namespace LMSPro.Api.Services;
 
@@ -13,10 +14,7 @@ public class CourseService : ICourseService
     private readonly IBaseRepository<Enrollment> EnrollmentRepository;
     private readonly ILogger<CourseService> Logger;
 
-    public CourseService(
-        ICourseRepository courseRepository,
-        IBaseRepository<Enrollment> enrollmentRepository,
-        ILogger<CourseService> logger)
+    public CourseService(ICourseRepository courseRepository, IBaseRepository<Enrollment> enrollmentRepository, ILogger<CourseService> logger)
     {
         CourseRepository = courseRepository;
         EnrollmentRepository = enrollmentRepository;
@@ -25,25 +23,21 @@ public class CourseService : ICourseService
 
     public async Task<long> CreateAsync(CourseCreateDto course)
     {
-        Logger.LogInformation("Creating course");
+        Logger.LogInformation("Create course started");
 
         var courseEntity = course.ToEntity();
 
         await CourseRepository.AddAsync(courseEntity);
         await CourseRepository.SaveChangesAsync();
 
-        Logger.LogInformation(
-            "Course created successfully. CourseId: {CourseId}",
-            courseEntity.CourseId);
+        Logger.LogInformation("Course created. Id: {CourseId}", courseEntity.CourseId);
 
         return courseEntity.CourseId;
     }
 
     public async Task DeleteAsync(long courseId)
     {
-        Logger.LogInformation(
-            "Deleting course. Id: {CourseId}",
-            courseId);
+        Logger.LogInformation("Delete course started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
             .GetAllQuery()
@@ -51,25 +45,19 @@ public class CourseService : ICourseService
 
         if (courseEntity == null)
         {
-            Logger.LogWarning(
-                "Course not found for delete. Id: {CourseId}",
-                courseId);
-
-            throw new Exception(
-                $"Course with ID {courseId} not found to delete.");
+            Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
+            throw new Exception($"Course with ID {courseId} not found to delete.");
         }
 
         CourseRepository.Delete(courseEntity);
         await CourseRepository.SaveChangesAsync();
 
-        Logger.LogInformation(
-            "Course deleted successfully. Id: {CourseId}",
-            courseId);
+        Logger.LogInformation("Course deleted. Id: {CourseId}", courseId);
     }
 
     public async Task<List<CourseGetDto>> GetAllAsync()
     {
-        Logger.LogInformation("Getting all courses");
+        Logger.LogInformation("Get all courses started");
 
         var query = CourseRepository.GetAllQuery();
 
@@ -79,50 +67,40 @@ public class CourseService : ICourseService
             .Select(c => c.ToGetDto())
             .ToList();
 
-        Logger.LogInformation(
-            "Retrieved {Count} courses",
-            courseDtos.Count);
+        Logger.LogInformation("Total courses: {Count}", courseDtos.Count);
 
         return courseDtos;
     }
 
     public async Task<CourseGetDto> GetByIdAsync(long courseId)
     {
-        Logger.LogInformation(
-            "Getting course by id {CourseId}",
-            courseId);
+        Logger.LogInformation("Get course by id started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
             .GetAllQuery()
             .Include(c => c.Lessons)
             .Include(c => c.Enrollments)
-                .ThenInclude(e => e.Student)
+            .ThenInclude(e => e.Student)
             .Include(c => c.TeacherCourses)
-                .ThenInclude(tc => tc.Teacher)
+            .ThenInclude(tc => tc.Teacher)
             .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
         {
-            Logger.LogWarning(
-                "Course not found. Id: {CourseId}",
-                courseId);
-
-            throw new Exception(
-                $"Course with ID {courseId} not found.");
+            Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
+            throw new Exception($"Course with ID {courseId} not found.");
         }
 
-        Logger.LogInformation(
-            "Course found. Id: {CourseId}",
-            courseId);
+        var course = courseEntity.ToGetDto();
 
-        return courseEntity.ToGetDto();
+        Logger.LogInformation("Course found. Id: {CourseId}", courseId);
+
+        return course;
     }
 
     public async Task UpdateAsync(long courseId, CourseUpdateDto course)
     {
-        Logger.LogInformation(
-            "Updating course. Id: {CourseId}",
-            courseId);
+        Logger.LogInformation("Update course started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
             .GetAllQuery()
@@ -130,12 +108,8 @@ public class CourseService : ICourseService
 
         if (courseEntity == null)
         {
-            Logger.LogWarning(
-                "Course not found for update. Id: {CourseId}",
-                courseId);
-
-            throw new Exception(
-                $"Course with ID {courseId} not found to update.");
+            Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
+            throw new Exception($"Course with ID {courseId} not found to update.");
         }
 
         courseEntity.Title = course.Title;
@@ -148,8 +122,6 @@ public class CourseService : ICourseService
         CourseRepository.Update(courseEntity);
         await CourseRepository.SaveChangesAsync();
 
-        Logger.LogInformation(
-            "Course updated successfully. Id: {CourseId}",
-            courseId);
+        Logger.LogInformation("Course updated. Id: {CourseId}", courseId);
     }
 }
