@@ -42,5 +42,6 @@ public static class ExamMapper
     {
         exam.Title = examUpdateDto.Title;
         exam.PassingScorePercentage = examUpdateDto.PassingScorePercentage;
+        exam.LessonId = examUpdateDto.LessonId;
     }
 }
