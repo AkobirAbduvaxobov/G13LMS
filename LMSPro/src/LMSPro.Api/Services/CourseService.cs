@@ -42,8 +42,8 @@ public class CourseService : ICourseService
         Logger.LogInformation("DeleteAsync started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
-            .GetAllQuery()
-            .FirstOrDefaultAsync(c => c.CourseId == courseId);
+                            .GetAllQuery()
+                            .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
         {
@@ -66,8 +66,8 @@ public class CourseService : ICourseService
         var courseEntities = await query.ToListAsync();
 
         var courseDtos = courseEntities
-            .Select(c => c.ToGetDto())
-            .ToList();
+                            .Select(c => c.ToGetDto())
+                            .ToList();
 
         Logger.LogInformation("Courses retrieved. Count: {Count}", courseDtos.Count);
 
@@ -79,7 +79,7 @@ public class CourseService : ICourseService
         Logger.LogInformation("GetByIdAsync started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
-                             .GetAllQuery()
+                            .GetAllQuery()
                             .Include(c => c.Lessons)
                             .Include(c => c.Enrollments)
                                 .ThenInclude(e => e.Student)
@@ -103,7 +103,7 @@ public class CourseService : ICourseService
         Logger.LogInformation("UpdateAsync started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
-                           .GetAllQuery()
+                            .GetAllQuery()
                             .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
