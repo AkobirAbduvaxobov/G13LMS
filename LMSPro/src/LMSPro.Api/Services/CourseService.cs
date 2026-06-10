@@ -79,13 +79,13 @@ public class CourseService : ICourseService
         Logger.LogInformation("GetByIdAsync started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
-            .GetAllQuery()
-            .Include(c => c.Lessons)
-            .Include(c => c.Enrollments)
-                .ThenInclude(e => e.Student)
-            .Include(c => c.TeacherCourses)
-                .ThenInclude(tc => tc.Teacher)
-            .FirstOrDefaultAsync(c => c.CourseId == courseId);
+                             .GetAllQuery()
+                            .Include(c => c.Lessons)
+                            .Include(c => c.Enrollments)
+                                .ThenInclude(e => e.Student)
+                            .Include(c => c.TeacherCourses)
+                                .ThenInclude(tc => tc.Teacher)
+                            .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
         {
@@ -103,8 +103,8 @@ public class CourseService : ICourseService
         Logger.LogInformation("UpdateAsync started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
-            .GetAllQuery()
-            .FirstOrDefaultAsync(c => c.CourseId == courseId);
+                           .GetAllQuery()
+                            .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
         {
