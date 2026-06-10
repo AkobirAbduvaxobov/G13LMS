@@ -79,6 +79,7 @@ public class CourseService : ICourseService
     {
         Logger.LogInformation("Getting course by ID: {CourseId}", courseId);
 
+        // eager loading
         var courseEntity = await CourseRepository
             .GetAllQuery()
             .Include(c => c.Lessons)
