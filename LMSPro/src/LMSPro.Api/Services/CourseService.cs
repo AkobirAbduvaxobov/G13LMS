@@ -76,6 +76,7 @@ public class CourseService : ICourseService
 
     public async Task<CourseGetDto> GetByIdAsync(long courseId)
     {
+        // eager loading
         Logger.LogInformation("GetByIdAsync started. Id: {CourseId}", courseId);
 
         var courseEntity = await CourseRepository
@@ -86,7 +87,7 @@ public class CourseService : ICourseService
                             .Include(c => c.TeacherCourses)
                                 .ThenInclude(tc => tc.Teacher)
                             .FirstOrDefaultAsync(c => c.CourseId == courseId);
-
+                            
         if (courseEntity == null)
         {
             Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
