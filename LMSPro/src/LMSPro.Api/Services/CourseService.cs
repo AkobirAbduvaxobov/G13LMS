@@ -3,7 +3,7 @@ using LMSPro.Api.Entities;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
+using Microsoft.Extensions.Logging;
 
 namespace LMSPro.Api.Services;
 
@@ -11,42 +11,56 @@ public class CourseService : ICourseService
 {
     private readonly ICourseRepository CourseRepository;
     private readonly IBaseRepository<Enrollment> EnrollmentRepository;
+    private readonly ILogger<CourseService> Logger;
 
     public CourseService(
         ICourseRepository courseRepository,
-        IBaseRepository<Enrollment> enrollmentRepository)
+        IBaseRepository<Enrollment> enrollmentRepository,
+        ILogger<CourseService> logger)
     {
         CourseRepository = courseRepository;
         EnrollmentRepository = enrollmentRepository;
+        Logger = logger;
     }
 
     public async Task<long> CreateAsync(CourseCreateDto course)
     {
+        Logger.LogInformation("CreateAsync started");
+
         var courseEntity = course.ToEntity();
 
         await CourseRepository.AddAsync(courseEntity);
         await CourseRepository.SaveChangesAsync();
+
+        Logger.LogInformation("Course created. Id: {CourseId}", courseEntity.CourseId);
 
         return courseEntity.CourseId;
     }
 
     public async Task DeleteAsync(long courseId)
     {
+        Logger.LogInformation("DeleteAsync started. Id: {CourseId}", courseId);
+
         var courseEntity = await CourseRepository
             .GetAllQuery()
             .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
         {
+            Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
             throw new Exception($"Course with ID {courseId} not found to delete.");
         }
 
         CourseRepository.Delete(courseEntity);
         await CourseRepository.SaveChangesAsync();
+
+        Logger.LogInformation("Course deleted. Id: {CourseId}", courseId);
     }
 
     public async Task<List<CourseGetDto>> GetAllAsync()
     {
+        Logger.LogInformation("GetAllAsync started");
+
         var query = CourseRepository.GetAllQuery();
 
         var courseEntities = await query.ToListAsync();
@@ -55,12 +69,15 @@ public class CourseService : ICourseService
             .Select(c => c.ToGetDto())
             .ToList();
 
+        Logger.LogInformation("Courses retrieved. Count: {Count}", courseDtos.Count);
+
         return courseDtos;
     }
 
     public async Task<CourseGetDto> GetByIdAsync(long courseId)
     {
-        // eager loading
+        Logger.LogInformation("GetByIdAsync started. Id: {CourseId}", courseId);
+
         var courseEntity = await CourseRepository
             .GetAllQuery()
             .Include(c => c.Lessons)
@@ -72,22 +89,26 @@ public class CourseService : ICourseService
 
         if (courseEntity == null)
         {
+            Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
             throw new Exception($"Course with ID {courseId} not found.");
         }
 
-        var course = courseEntity.ToGetDto();
+        Logger.LogInformation("Course found. Id: {CourseId}", courseId);
 
-        return course;
+        return courseEntity.ToGetDto();
     }
 
     public async Task UpdateAsync(long courseId, CourseUpdateDto course)
     {
+        Logger.LogInformation("UpdateAsync started. Id: {CourseId}", courseId);
+
         var courseEntity = await CourseRepository
             .GetAllQuery()
             .FirstOrDefaultAsync(c => c.CourseId == courseId);
 
         if (courseEntity == null)
         {
+            Logger.LogWarning("Course not found. Id: {CourseId}", courseId);
             throw new Exception($"Course with ID {courseId} not found to update.");
         }
 
@@ -99,7 +120,8 @@ public class CourseService : ICourseService
         courseEntity.IsActive = course.IsActive;
 
         CourseRepository.Update(courseEntity);
-
         await CourseRepository.SaveChangesAsync();
+
+        Logger.LogInformation("Course updated. Id: {CourseId}", courseId);
     }
 }
