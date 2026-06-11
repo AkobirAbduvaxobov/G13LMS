@@ -8,37 +8,31 @@ namespace LMSPro.Api.Validators
         public QuestionCreateDtoValidator()
         {
             RuleFor(x => x.Text)
-            .NotEmpty()
-            .WithMessage("Question text is required")
-            .MaximumLength(500);
+            .NotEmpty().WithMessage("Text is required.")
+            .MaximumLength(1000).WithMessage("Text must not exceed 1000 characters.");
 
             RuleFor(x => x.VariantA)
-                .NotEmpty()
-                .WithMessage("Variant A is required");
+                .NotEmpty().WithMessage("VariantA is required.")
+                .MaximumLength(500).WithMessage("VariantA must not exceed 500 characters.");
 
             RuleFor(x => x.VariantB)
-                .NotEmpty()
-                .WithMessage("Variant B is required");
+                .NotEmpty().WithMessage("VariantB is required.")
+                .MaximumLength(500).WithMessage("VariantB must not exceed 500 characters.");
 
             RuleFor(x => x.VariantC)
-                .NotEmpty()
-                .WithMessage("Variant C is required");
+                .NotEmpty().WithMessage("VariantC is required.")
+                .MaximumLength(500).WithMessage("VariantC must not exceed 500 characters.");
 
             RuleFor(x => x.VariantD)
-                .NotEmpty()
-                .WithMessage("Variant D is required");
+                .NotEmpty().WithMessage("VariantD is required.")
+                .MaximumLength(500).WithMessage("VariantD must not exceed 500 characters.");
 
             RuleFor(x => x.Answer)
-                .NotEmpty()
-                .WithMessage("Answer is required");
+                .NotEmpty().WithMessage("Answer is required.")
+                .MaximumLength(500).WithMessage("Answer must not exceed 500 characters.");
 
             RuleFor(x => x.LessonId)
-                .GreaterThan(0)
-                .WithMessage("LessonId must be greater than 0");
-
-            RuleFor(x => x.Answer)
-    .Must(answer => new[] { "A", "B", "C", "D" }.Contains(answer))
-    .WithMessage("Answer must be A, B, C, or D");
+                .GreaterThan(0).WithMessage("LessonId must be greater than 0.");
         }
     }
 }
