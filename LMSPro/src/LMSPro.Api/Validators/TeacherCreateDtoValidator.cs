@@ -1,0 +1,19 @@
+﻿using FluentValidation;
+using LMSPro.Api.Dtos;
+
+namespace LMSPro.Api.Validators;
+
+public class TeacherCreateDtoValidator : AbstractValidator<TeacherCreateDto>
+{
+    public TeacherCreateDtoValidator()
+    {
+        RuleFor(x => x.FirstName)
+            .NotEmpty().WithMessage("First name is required.")
+            .MaximumLength(50).WithMessage("First name must not exceed 50 characters.")
+            .MinimumLength(2).WithMessage("First name must be at least 2 characters.");
+        RuleFor(x => x.LastName)
+            .NotEmpty().WithMessage("Last name is required.")
+            .MaximumLength(50).WithMessage("Last name must not exceed 50 characters.")
+            .MinimumLength(2).WithMessage("Last name must be at least 2 characters.");
+    }
+}
