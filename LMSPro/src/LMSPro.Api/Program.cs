@@ -26,7 +26,6 @@ public class Program
 
         //builder.Services.AddValidatorsFromAssemblyContaining<CourseCreateDto>();
         builder.Services.AddValidatorsFromAssembly(typeof(CourseCreateDto).Assembly);
-        builder.Services.AddValidatorsFromAssembly(typeof(ExamUpdateDto).Assembly);
 
 
         builder.Services.AddControllers();
