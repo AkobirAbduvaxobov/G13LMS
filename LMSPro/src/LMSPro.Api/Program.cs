@@ -26,6 +26,8 @@ public class Program
 
         //builder.Services.AddValidatorsFromAssemblyContaining<CourseCreateDto>();
         builder.Services.AddValidatorsFromAssembly(typeof(CourseCreateDto).Assembly);
+        builder.Services.AddValidatorsFromAssembly(typeof(ExamUpdateDto).Assembly);
+
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
