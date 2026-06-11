@@ -1,4 +1,5 @@
-﻿using LMSPro.Api.Dtos;
+﻿using FluentValidation;
+using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
@@ -12,20 +13,30 @@ public class CourseService : ICourseService
     private readonly ICourseRepository CourseRepository;
     private readonly IBaseRepository<Enrollment> EnrollmentRepository;
     private readonly ILogger<CourseService> Logger;
+    private readonly IValidator<CourseCreateDto> CourseCreateDtoValidator;
 
     public CourseService(
         ICourseRepository courseRepository,
         IBaseRepository<Enrollment> enrollmentRepository,
-        ILogger<CourseService> logger)
+        ILogger<CourseService> logger,
+        IValidator<CourseCreateDto> courseCreateDtoValidator)
     {
         CourseRepository = courseRepository;
         EnrollmentRepository = enrollmentRepository;
         Logger = logger;
+        CourseCreateDtoValidator = courseCreateDtoValidator;
     }
 
     public async Task<long> CreateAsync(CourseCreateDto course)
     {
         Logger.LogInformation("CreateAsync started");
+        var result = CourseCreateDtoValidator.Validate(course);
+
+        if (!result.IsValid)
+        {
+            Logger.LogWarning("Validation error while Creating");
+            throw new ValidationException(result.Errors);
+        }
 
         var courseEntity = course.ToEntity();
 

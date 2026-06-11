@@ -3,6 +3,8 @@ using LMSPro.Api.Configurations;
 using LMSPro.Api.Data.DataSeeder;
 using LMSPro.Api.Data;
 using Serilog;
+using FluentValidation;
+using LMSPro.Api.Dtos;
 
 namespace LMSPro.Api;
 
@@ -22,6 +24,8 @@ public class Program
         builder.Logging.ClearProviders(); // Remove default logging providers
         builder.Logging.AddSerilog(dispose: true); // Add Serilog as the logging provider
 
+        //builder.Services.AddValidatorsFromAssemblyContaining<CourseCreateDto>();
+        builder.Services.AddValidatorsFromAssembly(typeof(CourseCreateDto).Assembly);
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
