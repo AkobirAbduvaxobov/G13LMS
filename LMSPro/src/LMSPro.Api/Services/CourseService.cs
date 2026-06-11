@@ -14,16 +14,19 @@ public class CourseService : ICourseService
     private readonly IBaseRepository<Enrollment> EnrollmentRepository;
     private readonly ILogger<CourseService> Logger;
     private readonly IValidator<CourseCreateDto> CourseCreateDtoValidator;
+    private readonly IValidator<CourseUpdateDto> CourseUpdateDtoValidator;
 
     public CourseService(
         ICourseRepository courseRepository,
         IBaseRepository<Enrollment> enrollmentRepository,
         ILogger<CourseService> logger,
+        IValidator<CourseUpdateDto> courseUpdateDtoValidator,
         IValidator<CourseCreateDto> courseCreateDtoValidator)
     {
         CourseRepository = courseRepository;
         EnrollmentRepository = enrollmentRepository;
         Logger = logger;
+        CourseUpdateDtoValidator = courseUpdateDtoValidator;
         CourseCreateDtoValidator = courseCreateDtoValidator;
     }
 
@@ -113,6 +116,14 @@ public class CourseService : ICourseService
     public async Task UpdateAsync(long courseId, CourseUpdateDto course)
     {
         Logger.LogInformation("UpdateAsync started. Id: {CourseId}", courseId);
+
+        var result = CourseUpdateDtoValidator.Validate(course);
+
+        if (!result.IsValid)
+        {
+            Logger.LogWarning("Validation error while updating course. Id: {CourseId}", courseId);
+            throw new ValidationException(result.Errors);
+        }
 
         var courseEntity = await CourseRepository
                             .GetAllQuery()
