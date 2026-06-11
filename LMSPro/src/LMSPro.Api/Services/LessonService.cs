@@ -1,17 +1,21 @@
 ﻿using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
+using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
-
+using Serilog.Core;
 namespace LMSPro.Api.Services;
 
 public class LessonService : ILessonService
 {
     private readonly IBaseRepository<Lesson> LessonRepository;
+    private readonly ILogger<QuestionService> Logger;
 
-    public LessonService(IBaseRepository<Lesson> lessonRepository)
+    public LessonService(IBaseRepository<Lesson> lessonRepository, 
+        ILogger<QuestionService> logger)
     {
         LessonRepository = lessonRepository;
+        Logger = logger;
     }
 
     public async Task<long> CreateAsync(LessonCreateDto lessonCreateDto)
@@ -38,9 +42,23 @@ public class LessonService : ILessonService
         throw new NotImplementedException();
     }
 
-    public Task<LessonGetDto> GetByIdAsync(long lessonId)
+    public async Task<LessonGetDto> GetByIdAsync(long lessonId)
     {
-        throw new NotImplementedException();
+        Logger.LogInformation("Getting lesson by ID: {LessonId}", lessonId);
+
+        var lessonEntity = await LessonRepository
+                            .GetAllQuery()
+                            .FirstOrDefaultAsync(c => c.LessonId == lessonId);
+        if (lessonEntity == null)
+        {
+            Logger.LogWarning("Lesson with ID: {LessonId} not found", lessonId);
+            throw new Exception($"Lesson with ID {lessonId} not found.");
+        }
+
+        var lessonDto = lessonEntity.ToGetDto();
+
+        Logger.LogInformation("Lesson with ID: {LessonId} retrieved successfully", lessonId);
+        return lessonDto;
     }
 
     public Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
