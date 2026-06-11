@@ -3,9 +3,9 @@ using LMSPro.Api.Dtos;
 
 namespace LMSPro.Api.Validators;
 
-public class CourceUpdateDtoValidator : AbstractValidator<CourseUpdateDto>
+public class CourseUpdateDtoValidator : AbstractValidator<CourseUpdateDto>
 {
-    public CourceUpdateDtoValidator()
+    public CourseUpdateDtoValidator()
     {
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Title is required.")
