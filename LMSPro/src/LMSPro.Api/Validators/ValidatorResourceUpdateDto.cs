@@ -10,8 +10,8 @@ namespace LMSPro.Api.Validators
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Title is required.")
-                .MaximumLength(200).WithMessage("Title must not exceed 200 characters.")
-                .Must(BeValidTitle).WithMessage("Title must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+                .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
+                
             RuleFor(x => x.Url)
                 .NotEmpty().WithMessage("Description is required.")
                 .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters.");
@@ -23,11 +23,6 @@ namespace LMSPro.Api.Validators
         }
 
 
-        // Titlega bunday validation yozilmaydi, Misol tariqasida ko'rsatilgan
-        private bool BeValidTitle(string title)
-        {
-            var pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,50}$";
-            return Regex.IsMatch(title, pattern);
-        }
+        
     }
 }
