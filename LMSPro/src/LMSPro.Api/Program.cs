@@ -5,6 +5,7 @@ using LMSPro.Api.Data;
 using Serilog;
 using FluentValidation;
 using LMSPro.Api.Dtos;
+using Exam.Api.Configurations;
 
 namespace LMSPro.Api;
 
