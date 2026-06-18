@@ -1,9 +1,11 @@
 ﻿using LMSPro.Api.Dtos;
+using LMSPro.Api.Filters;
 using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMSPro.Api.Controllers;
 
+//[TypeFilter(typeof(LoggingActionFilter))]
 [Route("api/courses")]
 [ApiController]
 public class CoursesController : ControllerBase
