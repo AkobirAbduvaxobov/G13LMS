@@ -1,4 +1,5 @@
-﻿using LMSPro.Api.Exceptions;
+﻿
+using LMSPro.Api.Exceptions;
 
 namespace LMSPro.Api.Middlewares;
 

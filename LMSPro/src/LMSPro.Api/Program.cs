@@ -47,6 +47,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        
+        app.UseMiddleware<UnluckyOdderMiddleware>();
 
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseRequestLogging();
