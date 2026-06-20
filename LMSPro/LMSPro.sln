@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6967EA92-D24E-43FC-951D-B82D1744237D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMSPro.Api", "src\LMSPro.Api\LMSPro.Api.csproj", "{6D7358BC-E802-49DA-9A1B-0ACAF0E80F53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chor", "src\Chor\Chor.csproj", "{7171D505-B8AB-41ED-A72B-6E8FCE207693}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,11 +19,16 @@ Global
 		{6D7358BC-E802-49DA-9A1B-0ACAF0E80F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D7358BC-E802-49DA-9A1B-0ACAF0E80F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D7358BC-E802-49DA-9A1B-0ACAF0E80F53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7171D505-B8AB-41ED-A72B-6E8FCE207693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7171D505-B8AB-41ED-A72B-6E8FCE207693}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7171D505-B8AB-41ED-A72B-6E8FCE207693}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7171D505-B8AB-41ED-A72B-6E8FCE207693}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6D7358BC-E802-49DA-9A1B-0ACAF0E80F53} = {6967EA92-D24E-43FC-951D-B82D1744237D}
+		{7171D505-B8AB-41ED-A72B-6E8FCE207693} = {6967EA92-D24E-43FC-951D-B82D1744237D}
 	EndGlobalSection
 EndGlobal
