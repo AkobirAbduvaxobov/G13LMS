@@ -2,8 +2,10 @@
 using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using LMSPro.Api.Filters;
 
 namespace LMSPro.Api.Controllers;
+
 
 [Route("api/questions")]
 [ApiController]
@@ -16,6 +18,7 @@ public class QuestionsController : ControllerBase
         QuestionService = questionService;
     }
 
+    //[TypeFilter(typeof(LoggingActionFilter))]
     [HttpGet("{skip}/{take}")]
     public async Task<PaginatedQuestionDto> GetAllQuestions(int skip, int take)
     {
