@@ -1,4 +1,3 @@
-
 using FluentValidation;
 using LMSPro.Api.Configurations;
 using LMSPro.Api.Dtos;
@@ -48,6 +47,7 @@ public class Program
 
         app.UseAuthorization();
 
+        app.UseMiddleware<TimeGateMiddleware>();
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseRequestLogging();
 
