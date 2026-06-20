@@ -5,6 +5,7 @@ using LMSPro.Api.Data;
 using Serilog;
 using FluentValidation;
 using LMSPro.Api.Dtos;
+using LMSPro.Api.Filters;
 
 namespace LMSPro.Api;
 
@@ -26,6 +27,16 @@ public class Program
 
         //builder.Services.AddValidatorsFromAssemblyContaining<CourseCreateDto>();
         builder.Services.AddValidatorsFromAssembly(typeof(CourseCreateDto).Assembly);
+
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<LoggingActionFilter>();
+        });
+
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<CustomExceptionFilter>();
+        });
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
