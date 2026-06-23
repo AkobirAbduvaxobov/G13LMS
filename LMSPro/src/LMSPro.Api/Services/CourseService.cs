@@ -1,10 +1,13 @@
 ﻿using FluentValidation;
+using LMSPro.Api.Caching;
+using LMSPro.Api.Configurations.Settings;
 using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
 using LMSPro.Api.Exceptions;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace LMSPro.Api.Services;
@@ -15,17 +18,23 @@ public class CourseService : ICourseService
     private readonly IBaseRepository<Enrollment> EnrollmentRepository;
     private readonly IValidator<CourseCreateDto> CourseCreateDtoValidator;
     private readonly IValidator<CourseUpdateDto> CourseUpdateDtoValidator;
+    private readonly CacheSettings CacheSettings;
+    private readonly IMemoryCache MemoryCache;
 
     public CourseService(
         ICourseRepository courseRepository,
         IBaseRepository<Enrollment> enrollmentRepository,
         IValidator<CourseUpdateDto> courseUpdateDtoValidator,
-        IValidator<CourseCreateDto> courseCreateDtoValidator)
+        IValidator<CourseCreateDto> courseCreateDtoValidator,
+        CacheSettings cacheSettings,
+        IMemoryCache memoryCache)
     {
         CourseRepository = courseRepository;
         EnrollmentRepository = enrollmentRepository;
         CourseUpdateDtoValidator = courseUpdateDtoValidator;
         CourseCreateDtoValidator = courseCreateDtoValidator;
+        CacheSettings = cacheSettings;
+        MemoryCache = memoryCache;
     }
 
     public async Task<long> CreateAsync(CourseCreateDto course)
@@ -48,11 +57,12 @@ public class CourseService : ICourseService
         await CourseRepository.AddAsync(courseEntity);
         await CourseRepository.SaveChangesAsync();
 
+        InvalidateCoursesCache(courseEntity.CourseId);
 
         return courseEntity.CourseId;
     }
 
-    public async Task DeleteAsync(long courseId)
+    public async Task DeleteAsync(long courseId) 
     {
 
         var courseEntity = await CourseRepository
@@ -66,11 +76,16 @@ public class CourseService : ICourseService
 
         CourseRepository.Delete(courseEntity);
         await CourseRepository.SaveChangesAsync();
-
+        InvalidateCoursesCache(courseEntity.CourseId);
     }
 
     public async Task<List<CourseGetDto>> GetAllAsync()
     {
+        List<CourseGetDto>? cachedCourses = new List<CourseGetDto>();
+        if (MemoryCache.TryGetValue(CacheKeys.CoursesAll, out cachedCourses))
+        {
+            return cachedCourses!;
+        }
 
         var query = CourseRepository.GetAllQuery();
 
@@ -81,12 +96,19 @@ public class CourseService : ICourseService
                             .ToList();
 
 
+        MemoryCache.Set(CacheKeys.CoursesAll, courseDtos, GetCourseCacheOptions());
+
         return courseDtos;
     }
 
-    public async Task<CourseGetDto> GetByIdAsync(long courseId)
+    public async Task<CourseGetDto> GetByIdAsync(long courseId) 
     {
-        // eager loading
+        var cacheKey = CacheKeys.CourseById(courseId); 
+
+        if (MemoryCache.TryGetValue(cacheKey, out CourseGetDto? cachedCourse))
+        {
+            return cachedCourse!;
+        }
 
         var courseEntity = await CourseRepository
                             .GetAllQuery()
@@ -101,9 +123,9 @@ public class CourseService : ICourseService
         {
             throw new NotFoundException($"Course with ID {courseId} not found.");
         }
-
-
-        return courseEntity.ToGetDto();
+        var dto = courseEntity.ToGetDto();
+        MemoryCache.Set(cacheKey, dto, GetCourseCacheOptions());
+        return dto;
     }
 
     public async Task UpdateAsync(long courseId, CourseUpdateDto course)
@@ -140,6 +162,24 @@ public class CourseService : ICourseService
 
         CourseRepository.Update(courseEntity);
         await CourseRepository.SaveChangesAsync();
+        InvalidateCoursesCache(courseEntity.CourseId);
+    }
 
+    private MemoryCacheEntryOptions GetCourseCacheOptions()
+    {
+        return new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(
+                CacheSettings.Courses.AbsoluteExpirationMinutes),
+
+            SlidingExpiration = TimeSpan.FromMinutes(
+                CacheSettings.Courses.SlidingExpirationMinutes)
+        };
+    }
+
+    private void InvalidateCoursesCache(long courseId)
+    {
+        MemoryCache.Remove(CacheKeys.CoursesAll);
+        MemoryCache.Remove(CacheKeys.CourseById(courseId));
     }
 }

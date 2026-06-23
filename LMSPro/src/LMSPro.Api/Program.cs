@@ -27,6 +27,7 @@ public class Program
         //builder.ConfigureFilters();
         builder.ConfigureDB();
         builder.ConfigureDI();
+        builder.ConfigureCache();
 
 
         var app = builder.Build();
