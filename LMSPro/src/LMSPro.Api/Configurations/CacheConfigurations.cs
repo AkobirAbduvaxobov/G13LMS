@@ -1,5 +1,4 @@
 ﻿using LMSPro.Api.Configurations.Settings;
-using LMSPro.Api.Entities;
 
 namespace LMSPro.Api.Configurations
 {
@@ -9,18 +8,36 @@ namespace LMSPro.Api.Configurations
         {
             builder.Services.AddMemoryCache();
 
-            var absoluteExpirationMinutes =
+            var courseAbsoluteExpirationMinutes =
                 builder.Configuration["CacheSettings:Courses:AbsoluteExpirationMinutes"];
 
-            var slidingExpirationMinutes =
+            var courseSlidingExpirationMinutes =
                 builder.Configuration["CacheSettings:Courses:SlidingExpirationMinutes"];
+
+            var questionAbsoluteExpirationMinutes =
+                builder.Configuration["CacheSettings:Questions:AbsoluteExpirationMinutes"];
+
+            var questionSlidingExpirationMinutes =
+                builder.Configuration["CacheSettings:Questions:SlidingExpirationMinutes"];
 
             var cacheSettings = new CacheSettings
             {
                 Courses = new CourseCacheSettings
                 {
-                    AbsoluteExpirationMinutes = int.Parse(absoluteExpirationMinutes),
-                    SlidingExpirationMinutes = int.Parse(slidingExpirationMinutes)
+                    AbsoluteExpirationMinutes =
+                        int.TryParse(courseAbsoluteExpirationMinutes, out var cAbs) ? cAbs : 10,
+
+                    SlidingExpirationMinutes =
+                        int.TryParse(courseSlidingExpirationMinutes, out var cSld) ? cSld : 5
+                },
+
+                Questions = new QuestionCacheSettings
+                {
+                    AbsoluteExpirationMinutes =
+                        int.TryParse(questionAbsoluteExpirationMinutes, out var qAbs) ? qAbs : 10,
+
+                    SlidingExpirationMinutes =
+                        int.TryParse(questionSlidingExpirationMinutes, out var qSld) ? qSld : 5
                 }
             };
 
