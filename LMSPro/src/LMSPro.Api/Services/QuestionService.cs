@@ -1,20 +1,29 @@
+using LMSPro.Api.Caching;
+using LMSPro.Api.Configurations.Settings;
 using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
 using LMSPro.Api.Exceptions;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LMSPro.Api.Services;
 
 public class QuestionService : IQuestionService
 {
     private readonly IBaseRepository<Question> QuestionRepository;
+    private readonly CacheSettings CacheSettings;
+    private readonly IMemoryCache MemoryCache;
 
     public QuestionService(
-        IBaseRepository<Question> questionRepository)
+        IBaseRepository<Question> questionRepository,
+        IMemoryCache memoryCache,
+        CacheSettings cacheSettings)
     {
         QuestionRepository = questionRepository;
+        MemoryCache = memoryCache;
+        CacheSettings = cacheSettings;
     }
 
     public async Task<long> CreateAsync(QuestionCreateDto questionCreateDto)
@@ -24,6 +33,7 @@ public class QuestionService : IQuestionService
         await QuestionRepository.AddAsync(question);
         await QuestionRepository.SaveChangesAsync();
 
+        InvalidateQuestionCache(question.QuestionId);
 
         return question.QuestionId;
     }
@@ -41,11 +51,17 @@ public class QuestionService : IQuestionService
 
         QuestionRepository.Delete(question);
         await QuestionRepository.SaveChangesAsync();
+        InvalidateQuestionCache(question.QuestionId);
 
     }
 
     public async Task<PaginatedQuestionDto> GetAllAsync(int skip = 0, int take = 20)
     {
+        PaginatedQuestionDto questionDtos1 = new PaginatedQuestionDto();
+        if (MemoryCache.TryGetValue(CacheKeys.QuestionsAll, out questionDtos1))
+        {
+            return questionDtos1;
+        }
 
         if (skip < 0) skip = 0;
         if (take > 20) take = 20;
@@ -70,10 +86,17 @@ public class QuestionService : IQuestionService
 
     public async Task<QuestionGetDto> GetByIdAsync(long questionId)
     {
+        var cacheKey = CacheKeys.QuestionById(questionId);
+
+        if (MemoryCache.TryGetValue(cacheKey, out QuestionGetDto? cachedCourse))
+        {
+            return cachedCourse;
+        }
+
 
         var question = await QuestionRepository.GetAllQuery()
-                            .Include(q => q.Lesson)
-                            .FirstOrDefaultAsync(q => q.QuestionId == questionId);
+                        .Include(q => q.Lesson)
+                        .FirstOrDefaultAsync(q => q.QuestionId == questionId);
 
         if (question == null)
         {
@@ -82,7 +105,7 @@ public class QuestionService : IQuestionService
 
         var questionDto = question.ToGetDto();
 
-
+        MemoryCache.Set(cacheKey, questionDto, GetQuestionCacheOptions());
         return questionDto;
     }
 
@@ -99,6 +122,24 @@ public class QuestionService : IQuestionService
 
         questionUpdateDto.UpdateEntity(question);
         await QuestionRepository.SaveChangesAsync();
+        InvalidateQuestionCache(question.QuestionId);
 
+    }
+    private MemoryCacheEntryOptions GetQuestionCacheOptions()
+    {
+        return new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(
+                CacheSettings.Questions.AbsoluteExpirationMinutes),
+
+            SlidingExpiration = TimeSpan.FromMinutes(
+                CacheSettings.Questions.SlidingExpirationMinutes)
+        };
+    }
+
+    private void InvalidateQuestionCache(long courseId)
+    {
+        MemoryCache.Remove(CacheKeys.QuestionsAll);
+        MemoryCache.Remove(CacheKeys.QuestionById(courseId));
     }
 }
