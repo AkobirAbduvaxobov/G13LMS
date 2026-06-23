@@ -13,9 +13,5 @@ public static class DatabaseConfigurations
 
         builder.Services.AddDbContext<AppDbContext>(options =>
           options.UseSqlServer(connectionString));
-
-
-            
-
     }
 }
