@@ -1,8 +1,10 @@
-﻿using LMSPro.Api.Filters;
+﻿using FluentValidation;
+using LMSPro.Api.Filters;
 using LMSPro.Api.Repositories;
 using LMSPro.Api.Services;
+using LMSPro.Api.Dtos;
 
-namespace LMSPro.Api.Configurations;
+namespace LMSPro.Api.Configurations; 
 
 public static class DependicyInjectionConfigurations
 {
@@ -16,5 +18,6 @@ public static class DependicyInjectionConfigurations
         builder.Services.AddScoped<CustomExceptionFilter>();
         //builder.Services.AddScoped<IBaseRepository, BaseRepository>();
         builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        builder.Services.AddValidatorsFromAssemblyContaining<QuestionCreateDtoValidator>();
     }
 }

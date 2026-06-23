@@ -23,7 +23,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.ConfigureSerilog();
+        // builder.ConfigureSerilog();
         //builder.ConfigureFilters();
         builder.ConfigureDB();
         builder.ConfigureDI();
