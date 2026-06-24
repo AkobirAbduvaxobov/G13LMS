@@ -13,6 +13,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
 
+
         //builder.Services.AddValidatorsFromAssemblyContaining<CourseCreateDto>();
         builder.Services.AddValidatorsFromAssembly(typeof(CourseCreateDto).Assembly);
 
@@ -46,6 +47,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        
+        app.UseMiddleware<TimeLukyCheckMiddleware>();
 
         app.UseAuthorization();
 
