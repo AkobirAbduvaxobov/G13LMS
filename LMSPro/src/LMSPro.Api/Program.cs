@@ -49,6 +49,7 @@ public class Program
 
         app.UseAuthorization();
 
+        app.UseMiddleware<TimeCheckMiddleware>();
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseRequestLogging();
 
