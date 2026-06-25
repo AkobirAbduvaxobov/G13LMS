@@ -3,6 +3,7 @@ using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using LMSPro.Api.Filters;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace LMSPro.Api.Controllers;
 
@@ -12,14 +13,16 @@ namespace LMSPro.Api.Controllers;
 public class QuestionsController : ControllerBase
 {
     private readonly IQuestionService QuestionService;
-
-    public QuestionsController(IQuestionService questionService)
+    private readonly IOutputCacheStore OutputCacheStore;
+    public QuestionsController(IQuestionService questionService , IOutputCacheStore outputCacheStore)
     {
         QuestionService = questionService;
+        OutputCacheStore = outputCacheStore;
     }
 
     //[TypeFilter(typeof(LoggingActionFilter))]
     [HttpGet("{skip}/{take}")]
+    [OutputCache(PolicyName = "ProductsCache")]
     public async Task<PaginatedQuestionDto> GetAllQuestions(int skip, int take)
     {
         var questions = await QuestionService.GetAllAsync(skip, take);
@@ -27,6 +30,7 @@ public class QuestionsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [OutputCache(Duration = 30)]
     public async Task<QuestionGetDto> GetById(long id)
     {
         var question = await QuestionService.GetByIdAsync(id);
@@ -45,6 +49,7 @@ public class QuestionsController : ControllerBase
     public async Task DeleteQuestion(long id)
     {
         await QuestionService.DeleteAsync(id);
+        await OutputCacheStore.EvictByTagAsync("products", default);
     }
 
 
