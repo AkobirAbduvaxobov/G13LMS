@@ -1,4 +1,5 @@
-﻿using LMSPro.Api.Services;
+﻿using LMSPro.Api.Dtos;
+using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,13 @@ public class LessonsController : ControllerBase
     public LessonsController(ILessonService lessonService)
     {
         LessonService = lessonService;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync([FromBody] LessonCreateDto lessonCreateDto)
+    {
+        var lessonId = await LessonService.CreateAsync(lessonCreateDto);
+        return Ok(lessonId);
     }
 
     [HttpDelete("{lessonId}")]
