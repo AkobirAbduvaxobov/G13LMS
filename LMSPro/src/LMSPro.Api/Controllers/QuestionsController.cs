@@ -1,8 +1,9 @@
 ﻿using LMSPro.Api.Dtos;
+using LMSPro.Api.Filters;
 using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using LMSPro.Api.Filters;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace LMSPro.Api.Controllers;
 
@@ -20,6 +21,7 @@ public class QuestionsController : ControllerBase
 
     //[TypeFilter(typeof(LoggingActionFilter))]
     [HttpGet("{skip}/{take}")]
+    [OutputCache(Duration = 60, VaryByRouteValueNames = new[] { "skip", "take" })]
     public async Task<PaginatedQuestionDto> GetAllQuestions(int skip, int take)
     {
         var questions = await QuestionService.GetAllAsync(skip, take);
@@ -27,6 +29,7 @@ public class QuestionsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [OutputCache(Duration = 30)]
     public async Task<QuestionGetDto> GetById(long id)
     {
         var question = await QuestionService.GetByIdAsync(id);
