@@ -17,7 +17,10 @@ public class LessonService : ILessonService
 
     public async Task<long> CreateAsync(LessonCreateDto lessonCreateDto)
     {
-        throw new NotImplementedException();
+        var lessonEntity = lessonCreateDto.ToEntity();
+        await LessonRepository.AddAsync(lessonEntity);
+        await LessonRepository.SaveChangesAsync();
+        return lessonEntity.LessonId;
     }
 
     public async Task DeleteAsync(long lessonId)
