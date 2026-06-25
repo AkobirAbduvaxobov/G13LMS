@@ -2,6 +2,7 @@
 using LMSPro.Api.Filters;
 using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace LMSPro.Api.Controllers;
 
@@ -11,10 +12,12 @@ namespace LMSPro.Api.Controllers;
 public class CoursesController : ControllerBase
 {
     private readonly ICourseService CourseService;
+    private readonly IOutputCacheStore OutputCacheStore;
 
-    public CoursesController(ICourseService courseService)
+    public CoursesController(ICourseService courseService, IOutputCacheStore outputCacheStore)
     {
         CourseService = courseService;
+        OutputCacheStore = outputCacheStore;
     }
 
     [HttpPost]
@@ -25,6 +28,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet]
+    [OutputCache(PolicyName = "ProductsCache")]
     public async Task<IEnumerable<CourseGetDto>> GetAllCourses()
     {
         var courses = await CourseService.GetAllAsync();
@@ -32,6 +36,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [OutputCache(Duration = 30)]
     public async Task<CourseGetDto> GetById(long id)
     {
         var course = await CourseService.GetByIdAsync(id);
@@ -42,6 +47,7 @@ public class CoursesController : ControllerBase
     public async Task DeleteCourse(long id)
     {
         await CourseService.DeleteAsync(id);
+        await OutputCacheStore.EvictByTagAsync("products", default);
     }
 
     [HttpPut("{id}")]

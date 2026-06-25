@@ -7,6 +7,15 @@ namespace LMSPro.Api.Configurations
         public static void ConfigureCache(this WebApplicationBuilder builder)
         {
             builder.Services.AddMemoryCache();
+            //builder.Services.AddOutputCache();
+
+            builder.Services.AddOutputCache(options =>
+            {
+                options.AddPolicy("ProductsCache", policy =>
+                    policy
+                        .Expire(TimeSpan.FromMinutes(5))
+                        .Tag("products"));
+            });
 
             var absoluteExpirationMinutes =
                 builder.Configuration["CacheSettings:Courses:AbsoluteExpirationMinutes"];

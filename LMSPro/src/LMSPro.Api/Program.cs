@@ -28,7 +28,7 @@ public class Program
         builder.ConfigureDB();
         builder.ConfigureDI();
         builder.ConfigureCache();
-
+        
 
         var app = builder.Build();
 
@@ -48,6 +48,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        app.UseOutputCache();
 
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseRequestLogging();
