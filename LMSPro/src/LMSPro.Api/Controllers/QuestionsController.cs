@@ -22,7 +22,7 @@ public class QuestionsController : ControllerBase
 
     //[TypeFilter(typeof(LoggingActionFilter))]
     [HttpGet("{skip}/{take}")]
-    [OutputCache(PolicyName = "ProductsCache")]
+    [OutputCache(PolicyName = "QuestionsCache")]
     public async Task<PaginatedQuestionDto> GetAllQuestions(int skip, int take)
     {
         var questions = await QuestionService.GetAllAsync(skip, take);
@@ -49,7 +49,7 @@ public class QuestionsController : ControllerBase
     public async Task DeleteQuestion(long id)
     {
         await QuestionService.DeleteAsync(id);
-        await OutputCacheStore.EvictByTagAsync("products", default);
+        await OutputCacheStore.EvictByTagAsync("question", default);
     }
 
 

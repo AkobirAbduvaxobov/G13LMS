@@ -28,7 +28,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpGet]
-    [OutputCache(PolicyName = "ProductsCache")]
+    [OutputCache(PolicyName = "CoursesCache")]
     public async Task<IEnumerable<CourseGetDto>> GetAllCourses()
     {
         var courses = await CourseService.GetAllAsync();
@@ -47,7 +47,7 @@ public class CoursesController : ControllerBase
     public async Task DeleteCourse(long id)
     {
         await CourseService.DeleteAsync(id);
-        await OutputCacheStore.EvictByTagAsync("products", default);
+        await OutputCacheStore.EvictByTagAsync("courses", default);
     }
 
     [HttpPut("{id}")]

@@ -11,10 +11,16 @@ namespace LMSPro.Api.Configurations
 
             builder.Services.AddOutputCache(options =>
             {
-                options.AddPolicy("ProductsCache", policy =>
+                options.AddPolicy("CoursesCache", policy =>
                     policy
                         .Expire(TimeSpan.FromMinutes(5))
-                        .Tag("products"));
+                        .Tag("courses"));
+
+                options.AddPolicy("QuestionsCache", policy =>
+                   policy
+                   .Expire(TimeSpan.FromMinutes(5))
+                   .Tag("questions"));
+
             });
 
             var absoluteExpirationMinutes =
