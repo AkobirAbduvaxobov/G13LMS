@@ -1,5 +1,6 @@
 ﻿using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
+using LMSPro.Api.Exceptions;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -58,9 +59,24 @@ public class LessonService : ILessonService
         return lessonDto;
     }
 
-    public Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
+    public async Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
     {
-        throw new NotImplementedException();
+        var lessonEntity = await LessonRepository
+            .GetAllQuery()
+            .FirstOrDefaultAsync(c => c.LessonId == lessonId);
+
+        if (lessonEntity == null)
+        {
+            throw new NotFoundException($"Lesson with ID {lessonId} not found to update.");
+        }
+
+        lessonEntity.Title = lessonUpdateDto.Title;
+        lessonEntity.Content = lessonUpdateDto.Content;
+        lessonEntity.Order = lessonUpdateDto.Order;
+        lessonEntity.Duration = lessonUpdateDto.Duration;
+        lessonEntity.CourseId = lessonUpdateDto.CourseId;
+
+        await LessonRepository.SaveChangesAsync();
     }
 
     private void ValidatePaginationParameters(ref int skip, ref int take)
