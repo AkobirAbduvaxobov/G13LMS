@@ -28,4 +28,10 @@ public class LessonsController : ControllerBase
     {
         await LessonService.DeleteAsync(lessonId);
     }
+
+    [HttpPut("{lessonId}")]
+    public async Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
+    {
+        await LessonService.UpdateAsync(lessonId, lessonUpdateDto);
+    }
 }
