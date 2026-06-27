@@ -30,9 +30,8 @@ public class LessonsController : ControllerBase
     }
 
     [HttpPut("{lessonId}")]
-    public async Task<IActionResult> UpdateAsync(long lessonId, [FromBody] LessonUpdateDto lessonUpdateDto)
+    public async Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
     {
         await LessonService.UpdateAsync(lessonId, lessonUpdateDto);
-        return Ok();
     }
 }

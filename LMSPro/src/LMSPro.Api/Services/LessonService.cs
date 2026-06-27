@@ -62,20 +62,15 @@ public class LessonService : ILessonService
     public async Task UpdateAsync(long lessonId, LessonUpdateDto lessonUpdateDto)
     {
         var lessonEntity = await LessonRepository
-            .GetAllQuery()
-            .FirstOrDefaultAsync(c => c.LessonId == lessonId);
+                            .GetAllQuery()
+                            .FirstOrDefaultAsync(c => c.LessonId == lessonId);
 
         if (lessonEntity == null)
         {
             throw new NotFoundException($"Lesson with ID {lessonId} not found to update.");
         }
 
-        lessonEntity.Title = lessonUpdateDto.Title;
-        lessonEntity.Content = lessonUpdateDto.Content;
-        lessonEntity.Order = lessonUpdateDto.Order;
-        lessonEntity.Duration = lessonUpdateDto.Duration;
-        lessonEntity.CourseId = lessonUpdateDto.CourseId;
-
+        lessonUpdateDto.ToUpdateEntity(lessonEntity);
         await LessonRepository.SaveChangesAsync();
     }
 
