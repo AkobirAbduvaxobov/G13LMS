@@ -153,12 +153,7 @@ public class CourseService : ICourseService
             throw new NotFoundException($"Course with ID {courseId} not found to update.");
         }
 
-        courseEntity.Title = course.Title;
-        courseEntity.Description = course.Description;
-        courseEntity.Price = course.Price;
-        courseEntity.DurationDays = course.DurationDays;
-        courseEntity.AccessPeriodDays = course.AccessPeriodDays;
-        courseEntity.IsActive = course.IsActive;
+        course.ToUpdateEntity(courseEntity);
 
         CourseRepository.Update(courseEntity);
         await CourseRepository.SaveChangesAsync();

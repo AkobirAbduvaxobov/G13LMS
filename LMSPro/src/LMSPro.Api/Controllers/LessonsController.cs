@@ -16,6 +16,18 @@ public class LessonsController : ControllerBase
         LessonService = lessonService;
     }
 
+    [HttpGet("{skip}/{take}")]
+    public async Task<PaginatedLessonDto> GetAll(int skip, int take)
+    {
+        return await LessonService.GetAllAsync(skip, take);
+    }
+
+    [HttpGet("{lessonId}")]
+    public async Task<LessonGetDto> GetById(long lessonId)
+    {
+        return await LessonService.GetByIdAsync(lessonId);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] LessonCreateDto lessonCreateDto)
     {

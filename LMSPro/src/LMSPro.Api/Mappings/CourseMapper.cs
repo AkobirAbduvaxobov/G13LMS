@@ -57,4 +57,14 @@ public static class CourseMapper
 
         return courseGetDto;
     }
+
+    public static void ToUpdateEntity(this CourseUpdateDto dto, Course course)
+    {
+        course.Title = dto.Title;
+        course.Description = dto.Description;
+        course.Price = dto.Price;
+        course.DurationDays = dto.DurationDays;
+        course.AccessPeriodDays = dto.AccessPeriodDays;
+        course.IsActive = dto.IsActive;
+    }
 }

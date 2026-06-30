@@ -24,10 +24,10 @@ public static class LessonMapper
         {
             res.Homeworks = lesson.Homeworks.Select(h => h.ToGetDto()).ToList();
         }
-        //if (lesson.Resources != null)
-        //{
-        //    res.Resources = lesson.Resources.Select(r => r.ToGetDto()).ToList();
-        //}
+        if (lesson.Resources != null)
+        {
+            res.Resources = lesson.Resources.Select(r => r.ToGetDto()).ToList();
+        }
         if (lesson.Exams != null)
         {
             res.Exams = lesson.Exams.Select(e => e.ToGetDto()).ToList();

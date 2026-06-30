@@ -19,6 +19,12 @@ public class EnrollmentService : IEnrollmentService
 
     public async Task<long> CreateAsync(EnrollmentCreateDto dto)
     {
+        var alreadyEnrolled = await EnrollmentRepository
+            .GetAllQuery()
+            .AnyAsync(x => x.StudentId == dto.StudentId && x.CourseId == dto.CourseId);
+        if (alreadyEnrolled)
+            throw new ConflictException($"Student {dto.StudentId} is already enrolled in course {dto.CourseId}.");
+
         var enrollment = dto.ToEntity();
 
         await EnrollmentRepository.AddAsync(enrollment);
