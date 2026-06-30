@@ -4,7 +4,6 @@ using LMSPro.Api.Exceptions;
 using LMSPro.Api.Mappings;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Serilog.Core;
 namespace LMSPro.Api.Services;
 
 public class LessonService : ILessonService
@@ -31,16 +30,30 @@ public class LessonService : ILessonService
                             .FirstOrDefaultAsync(c => c.LessonId == lessonId);
         if (lessonEntity == null)
         {
-            throw new Exception($"Course with ID {lessonId} not found to delete.");
+            throw new NotFoundException($"Lesson with ID {lessonId} not found to delete.");
         }
 
         LessonRepository.Delete(lessonEntity);
         await LessonRepository.SaveChangesAsync();
     }
 
-    public Task<PaginatedLessonDto> GetAllAsync(int skip, int take)
+    public async Task<PaginatedLessonDto> GetAllAsync(int skip, int take)
     {
-        throw new NotImplementedException();
+        ValidatePaginationParameters(ref skip, ref take);
+
+        var totalCount = await LessonRepository.GetAllQuery().CountAsync();
+
+        var lessons = await LessonRepository
+                            .GetAllQuery()
+                            .Skip(skip)
+                            .Take(take)
+                            .ToListAsync();
+
+        return new PaginatedLessonDto
+        {
+            TotalCount = totalCount,
+            LessonGetDtos = lessons.Select(l => l.ToGetDto()).ToList()
+        };
     }
 
     public async Task<LessonGetDto> GetByIdAsync(long lessonId)
@@ -51,7 +64,7 @@ public class LessonService : ILessonService
                             .FirstOrDefaultAsync(c => c.LessonId == lessonId);
         if (lessonEntity == null)
         {
-            throw new Exception($"Lesson with ID {lessonId} not found.");
+            throw new NotFoundException($"Lesson with ID {lessonId} not found.");
         }
 
         var lessonDto = lessonEntity.ToGetDto();

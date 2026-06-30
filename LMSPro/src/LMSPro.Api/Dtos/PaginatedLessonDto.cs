@@ -1,6 +1,7 @@
-﻿namespace LMSPro.Api.Dtos
+﻿namespace LMSPro.Api.Dtos;
+
+public class PaginatedLessonDto
 {
-    public class PaginatedLessonDto
-    {
-    }
+    public List<LessonGetDto> LessonGetDtos { get; set; }
+    public int TotalCount { get; set; }
 }
