@@ -3,7 +3,7 @@
 public static class CacheKeys
 {
     public const string CoursesAll = "courses_all";
-
+    public const string StudentsAll = "students_all";
     public const string QuestionsAll = "questions_all_skip_{0}_take_{1}";
 
     public static string CourseById(long courseId)
@@ -13,5 +13,9 @@ public static class CacheKeys
     public static string QuestionById(long questionId)
     {
         return $"question_{questionId}";
+    }
+    public static string StudentById(long studentId)
+    {
+        return $"student_{studentId}";
     }
 }

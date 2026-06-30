@@ -44,6 +44,15 @@ namespace LMSPro.Api.Configurations
             };
 
             builder.Services.AddSingleton(cacheSettings);
+
+            // Redis
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration =
+                    builder.Configuration.GetConnectionString("Redis");
+            });
+
+
         }
     }
 }
