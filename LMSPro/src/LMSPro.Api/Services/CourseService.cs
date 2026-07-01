@@ -158,6 +158,18 @@ public class CourseService : ICourseService
         CourseRepository.Update(courseEntity);
         await CourseRepository.SaveChangesAsync();
         InvalidateCoursesCache(courseEntity.CourseId);
+        
+        
+        
+        
+        //cesceadcdscsddscdsc
+        
+        
+        
+        //csecdscdeccsecdc
+        
+        
+        ////csdcdscdscdscdsc
     }
 
     private MemoryCacheEntryOptions GetCourseCacheOptions()
