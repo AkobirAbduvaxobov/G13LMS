@@ -35,6 +35,9 @@ public class Program
         builder.ConfigureDB();
         builder.ConfigureDI();
         builder.ConfigureCache();
+        builder.ConfigureJwt();
+        builder.AddJwtAuthentication();
+
 
         var app = builder.Build();
 
