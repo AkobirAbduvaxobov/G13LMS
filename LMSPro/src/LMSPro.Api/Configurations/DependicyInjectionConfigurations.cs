@@ -20,6 +20,7 @@ public static class DependicyInjectionConfigurations
         builder.Services.AddScoped<IHomeworkService, HomeworkService>();
         builder.Services.AddScoped<IResourceService, ResourceService>();
         builder.Services.AddScoped<IStudentService, StudentService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<RedisCacheService>();
     }
 }
