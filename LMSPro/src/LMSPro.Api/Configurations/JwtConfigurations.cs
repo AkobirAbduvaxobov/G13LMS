@@ -1,0 +1,24 @@
+﻿using LMSPro.Api.Configurations.Settings;
+
+namespace LMSPro.Api.Configurations;
+
+public static class JwtConfigurations
+{
+    public static void ConfigureJwt(this WebApplicationBuilder builder)
+    {
+        var issuer = builder.Configuration["Jwt:Issuer"];
+        var audience = builder.Configuration["Jwt:Audience"];
+        var secretKey = builder.Configuration["Jwt:SecurityKey"];
+        var lifetime = builder.Configuration["Jwt:Lifetime"];
+
+        var jwtSettings = new JwtSettings
+        {
+            Issuer = issuer,
+            Audience = audience,
+            SecretKey = secretKey,
+            Lifetime = int.Parse(lifetime)
+        };
+
+        builder.Services.AddSingleton(jwtSettings);
+    }
+}

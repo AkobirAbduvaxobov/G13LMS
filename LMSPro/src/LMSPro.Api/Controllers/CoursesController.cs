@@ -1,5 +1,6 @@
 ﻿using LMSPro.Api.Dtos;
 using LMSPro.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 
@@ -18,6 +19,7 @@ public class CoursesController : ControllerBase
         OutputCacheStore = outputCacheStore;
     }
 
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPost]
     public async Task<long> CreateCourse(CourseCreateDto courseCreateDto)
     {
@@ -33,6 +35,7 @@ public class CoursesController : ControllerBase
         return courses;
     }
 
+    [Authorize(Roles = "Student,Teacher,Admin,SuperAdmin")]
     [HttpGet("{id}")]
     [OutputCache(Duration = 30)]
     public async Task<CourseGetDto> GetById(long id)
@@ -41,6 +44,7 @@ public class CoursesController : ControllerBase
         return course;
     }
 
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpDelete("{id}")]
     public async Task DeleteCourse(long id)
     {
@@ -48,6 +52,7 @@ public class CoursesController : ControllerBase
         await OutputCacheStore.EvictByTagAsync("products", default);
     }
 
+    [Authorize(Roles = "Admin,SuperAdmin")]
     [HttpPut("{id}")]
     public async Task UpdateCourse(long id, CourseUpdateDto courseUpdateDto)
     {

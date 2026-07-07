@@ -22,4 +22,11 @@ public class AuthController : ControllerBase
         var userId = await AuthService.RegisterAsync(registerDto);
         return userId;
     }
+
+    [HttpPost("login")]
+    public async Task<LoginResponseDto> Login(LoginDto loginDto)
+    {
+        var token = await AuthService.LoginAsync(loginDto);
+        return token;
+    }
 }
