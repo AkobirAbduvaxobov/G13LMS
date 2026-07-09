@@ -12,4 +12,5 @@ public class User
     public DateTime CreatedAt { get; set; }
 
     public Password Password { get; set; }
+    public ICollection<Car> Cars { get; set; }
 }

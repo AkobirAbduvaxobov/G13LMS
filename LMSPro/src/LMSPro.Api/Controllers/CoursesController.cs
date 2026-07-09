@@ -23,6 +23,7 @@ public class CoursesController : ControllerBase
     [HttpPost]
     public async Task<long> CreateCourse(CourseCreateDto courseCreateDto)
     {
+        // var id = User.Identity?.Name ?? throw new UnauthorizedAccessException("User is not authenticated.");
         var courseId = await CourseService.CreateAsync(courseCreateDto);
         return courseId;
     }
