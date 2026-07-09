@@ -21,11 +21,11 @@ public class TokenService : ITokenService
         var IdentityClaims = new Claim[]
         {
             new Claim("UserId",userGetDto.UserId.ToString()),
-            new Claim("FirstName",userGetDto.FirstName),
-            new Claim("LastName",userGetDto.LastName),
-            new Claim("UserName",userGetDto.UserName),
+            new Claim("FirstName",userGetDto.FirstName.ToString()),
+            new Claim("LastName",userGetDto.LastName.ToString()),
+            new Claim("UserName",userGetDto.UserName.ToString()),
             new Claim(ClaimTypes.Role,userGetDto.Role.ToString()),
-            new Claim(ClaimTypes.Email,userGetDto.Email)
+            new Claim(ClaimTypes.Email,userGetDto.Email.ToString())
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.SecretKey));

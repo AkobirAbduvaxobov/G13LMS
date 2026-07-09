@@ -17,7 +17,7 @@ public class UsersController : ControllerBase
         UserService = userService;
     }
 
-    //[Authorize(Roles = "Teacher,Admin,SuperAdmin")]
+    [Authorize(Roles = "Teacher,Admin,SuperAdmin")]
     [HttpGet]
     public async Task<List<UserGetDto>> GetAll()
     {

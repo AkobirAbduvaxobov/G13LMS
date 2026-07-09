@@ -24,8 +24,5 @@ public static class DependicyInjectionConfigurations
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<RedisCacheService>();
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-        builder.Services.AddScoped<ICarService, CarService>();
     }
 }

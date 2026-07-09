@@ -22,32 +22,6 @@ namespace LMSPro.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("LMSPro.Api.Entities.Car", b =>
-                {
-                    b.Property<long>("CarId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CarId"));
-
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("CarId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Car");
-                });
-
             modelBuilder.Entity("LMSPro.Api.Entities.Course", b =>
                 {
                     b.Property<long>("CourseId")
@@ -438,17 +412,6 @@ namespace LMSPro.Api.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("LMSPro.Api.Entities.Car", b =>
-                {
-                    b.HasOne("LMSPro.Api.Entities.User", "User")
-                        .WithMany("Cars")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LMSPro.Api.Entities.Enrollment", b =>
                 {
                     b.HasOne("LMSPro.Api.Entities.Course", "Course")
@@ -585,8 +548,6 @@ namespace LMSPro.Api.Migrations
 
             modelBuilder.Entity("LMSPro.Api.Entities.User", b =>
                 {
-                    b.Navigation("Cars");
-
                     b.Navigation("Password")
                         .IsRequired();
                 });
