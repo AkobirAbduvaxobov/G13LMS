@@ -1,4 +1,5 @@
-﻿using LMSPro.Api.Dtos;
+﻿using LMSPro.Api.Configurations.Settings;
+using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,14 @@ public class AuthService : IAuthService
     private readonly IBaseRepository<User> UserRepository;
     private readonly IBaseRepository<Password> PasswordRepository;
     private readonly ITokenService TokenService;
+    private readonly JwtSettings JwtSettings;
 
-    public AuthService(IBaseRepository<User> userRepository, IBaseRepository<Password> passwordRepository, ITokenService tokenService)
+    public AuthService(IBaseRepository<User> userRepository, IBaseRepository<Password> passwordRepository, ITokenService tokenService, JwtSettings jwtSettings)
     {
         UserRepository = userRepository;
         PasswordRepository = passwordRepository;
         TokenService = tokenService;
+        JwtSettings = jwtSettings;
     }
 
     public async Task<LoginResponseDto> LoginAsync(LoginDto loginDto)
@@ -59,7 +62,7 @@ public class AuthService : IAuthService
             AccessToken = token,
             RefreshToken = null,
             TokenType = "Bearer",
-            Expires = 5,
+            Expires = JwtSettings.Lifetime,
         };
 
 

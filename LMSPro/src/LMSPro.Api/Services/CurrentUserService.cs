@@ -53,7 +53,7 @@ public class CurrentUserService : ICurrentUserService
 
     private string? GetEmail()
     {
-        var emailClaim = HttpContextAccessor.HttpContext?.User?.FindFirst("Email");
+        var emailClaim = HttpContextAccessor.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.Email);
         if (emailClaim != null)
         {
             return emailClaim.Value;
