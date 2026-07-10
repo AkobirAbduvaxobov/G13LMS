@@ -17,11 +17,16 @@ public class CarService : ICarService
 
     public async Task<long> AddAsync(CarCreateDto carCreateDto)
     {
+        if (CurrentUserService.UserId is null)
+        {
+            throw new UnauthorizedAccessException("You must be logged in to add a car.");
+        }
+
         var car = new Car()
         {
             Model = carCreateDto.Model,
             Brand = carCreateDto.Brand,
-            UserId = CurrentUserService.UserId ?? 0
+            UserId = CurrentUserService.UserId.Value
         };
 
         await CarRepository.AddAsync(car);
