@@ -59,8 +59,8 @@ public class AuthService : IAuthService
     public async Task<LoginResponseDto> RefreshTokenAsync(RefreshTokenRequestDto refreshTokenRequestDto)
     {
         var storedToken = await RefreshTokenRepository.GetAllQuery()
-            .Include(rt => rt.User)
-            .FirstOrDefaultAsync(rt => rt.Token == refreshTokenRequestDto.RefreshToken);
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(x => x.Token == refreshTokenRequestDto.RefreshToken);
 
         if (storedToken == null || !storedToken.IsActive)
         {
@@ -81,7 +81,7 @@ public class AuthService : IAuthService
     public async Task LogoutAsync(RefreshTokenRequestDto refreshTokenRequestDto)
     {
         var storedToken = await RefreshTokenRepository.GetAllQuery()
-            .FirstOrDefaultAsync(rt => rt.Token == refreshTokenRequestDto.RefreshToken);
+            .FirstOrDefaultAsync(x => x.Token == refreshTokenRequestDto.RefreshToken);
 
         if (storedToken == null)
         {
