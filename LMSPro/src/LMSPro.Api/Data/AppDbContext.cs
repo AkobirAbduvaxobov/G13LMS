@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<TeacherCourse> TeacherCourses { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
     public AppDbContext(DbContextOptions<AppDbContext> options)

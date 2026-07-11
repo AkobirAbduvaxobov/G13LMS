@@ -13,4 +13,5 @@ public class User
 
     public Password Password { get; set; }
     public ICollection<Car> Cars { get; set; }
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
 }
