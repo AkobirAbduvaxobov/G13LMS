@@ -70,7 +70,7 @@ public class AuthService : IAuthService
         var loginResponseDto = await GenerateLoginResponseAsync(storedToken.User);
 
         // Rotate: revoke the old refresh token and link it to the newly issued one.
-        storedToken.RevokedAt = DateTime.UtcNow;
+        storedToken.RevokedAt = DateTime.Now;
         storedToken.ReplacedByToken = loginResponseDto.RefreshToken;
         RefreshTokenRepository.Update(storedToken);
         await RefreshTokenRepository.SaveChangesAsync();
@@ -90,7 +90,7 @@ public class AuthService : IAuthService
 
         if (storedToken.IsActive)
         {
-            storedToken.RevokedAt = DateTime.UtcNow;
+            storedToken.RevokedAt = DateTime.Now;
             RefreshTokenRepository.Update(storedToken);
             await RefreshTokenRepository.SaveChangesAsync();
         }
@@ -117,8 +117,8 @@ public class AuthService : IAuthService
         {
             Token = refreshTokenValue,
             UserId = user.UserId,
-            CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(JwtSettings.RefreshTokenLifetimeDays),
+            CreatedAt = DateTime.Now,
+            ExpiresAt = DateTime.Now.AddDays(JwtSettings.RefreshTokenLifetimeDays),
         };
 
         await RefreshTokenRepository.AddAsync(refreshToken);
