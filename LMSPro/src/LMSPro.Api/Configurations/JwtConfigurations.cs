@@ -10,13 +10,15 @@ public static class JwtConfigurations
         var audience = builder.Configuration["Jwt:Audience"];
         var secretKey = builder.Configuration["Jwt:SecurityKey"];
         var lifetime = builder.Configuration["Jwt:Lifetime"];
+        var refreshTokenLifetimeDays = builder.Configuration["Jwt:RefreshTokenLifetimeDays"];
 
         var jwtSettings = new JwtSettings
         {
             Issuer = issuer,
             Audience = audience,
             SecretKey = secretKey,
-            Lifetime = int.Parse(lifetime)
+            Lifetime = int.Parse(lifetime),
+            RefreshTokenLifetimeDays = int.Parse(refreshTokenLifetimeDays)
         };
 
         builder.Services.AddSingleton(jwtSettings);

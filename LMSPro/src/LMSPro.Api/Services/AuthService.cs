@@ -1,6 +1,7 @@
 ﻿using LMSPro.Api.Configurations.Settings;
 using LMSPro.Api.Dtos;
 using LMSPro.Api.Entities;
+using LMSPro.Api.Exceptions;
 using LMSPro.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,13 +11,20 @@ public class AuthService : IAuthService
 {
     private readonly IBaseRepository<User> UserRepository;
     private readonly IBaseRepository<Password> PasswordRepository;
+    private readonly IBaseRepository<RefreshToken> RefreshTokenRepository;
     private readonly ITokenService TokenService;
     private readonly JwtSettings JwtSettings;
 
-    public AuthService(IBaseRepository<User> userRepository, IBaseRepository<Password> passwordRepository, ITokenService tokenService, JwtSettings jwtSettings)
+    public AuthService(
+        IBaseRepository<User> userRepository,
+        IBaseRepository<Password> passwordRepository,
+        IBaseRepository<RefreshToken> refreshTokenRepository,
+        ITokenService tokenService,
+        JwtSettings jwtSettings)
     {
         UserRepository = userRepository;
         PasswordRepository = passwordRepository;
+        RefreshTokenRepository = refreshTokenRepository;
         TokenService = tokenService;
         JwtSettings = jwtSettings;
     }
@@ -43,6 +51,53 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Invalid password.");
         }
 
+        var loginResponseDto = await GenerateLoginResponseAsync(user);
+
+        return loginResponseDto;
+    }
+
+    public async Task<LoginResponseDto> RefreshTokenAsync(RefreshTokenRequestDto refreshTokenRequestDto)
+    {
+        var storedToken = await RefreshTokenRepository.GetAllQuery()
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt => rt.Token == refreshTokenRequestDto.RefreshToken);
+
+        if (storedToken == null || !storedToken.IsActive)
+        {
+            throw new UnauthorizedException("Invalid or expired refresh token.");
+        }
+
+        var loginResponseDto = await GenerateLoginResponseAsync(storedToken.User);
+
+        // Rotate: revoke the old refresh token and link it to the newly issued one.
+        storedToken.RevokedAt = DateTime.UtcNow;
+        storedToken.ReplacedByToken = loginResponseDto.RefreshToken;
+        RefreshTokenRepository.Update(storedToken);
+        await RefreshTokenRepository.SaveChangesAsync();
+
+        return loginResponseDto;
+    }
+
+    public async Task LogoutAsync(RefreshTokenRequestDto refreshTokenRequestDto)
+    {
+        var storedToken = await RefreshTokenRepository.GetAllQuery()
+            .FirstOrDefaultAsync(rt => rt.Token == refreshTokenRequestDto.RefreshToken);
+
+        if (storedToken == null)
+        {
+            throw new NotFoundException("Refresh token not found.");
+        }
+
+        if (storedToken.IsActive)
+        {
+            storedToken.RevokedAt = DateTime.UtcNow;
+            RefreshTokenRepository.Update(storedToken);
+            await RefreshTokenRepository.SaveChangesAsync();
+        }
+    }
+
+    private async Task<LoginResponseDto> GenerateLoginResponseAsync(User user)
+    {
         var userGetDto = new UserGetDto()
         {
             UserId = user.UserId,
@@ -55,18 +110,27 @@ public class AuthService : IAuthService
             CreatedAt = user.CreatedAt
         };
 
-        var token = TokenService.GetToken(userGetDto);
+        var accessToken = TokenService.GetToken(userGetDto);
+        var refreshTokenValue = TokenService.GenerateRefreshToken();
 
-        var loginResponseDto = new LoginResponseDto()
+        var refreshToken = new RefreshToken()
         {
-            AccessToken = token,
-            RefreshToken = null,
+            Token = refreshTokenValue,
+            UserId = user.UserId,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddDays(JwtSettings.RefreshTokenLifetimeDays),
+        };
+
+        await RefreshTokenRepository.AddAsync(refreshToken);
+        await RefreshTokenRepository.SaveChangesAsync();
+
+        return new LoginResponseDto()
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshTokenValue,
             TokenType = "Bearer",
             Expires = JwtSettings.Lifetime,
         };
-
-
-        return loginResponseDto;
     }
 
     public async Task<long> RegisterAsync(RegisterDto registerDto)

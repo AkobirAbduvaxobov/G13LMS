@@ -5,4 +5,5 @@ namespace LMSPro.Api.Services;
 public interface ITokenService
 {
     string GetToken(UserGetDto userGetDto);
+    string GenerateRefreshToken();
 }

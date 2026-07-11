@@ -29,4 +29,18 @@ public class AuthController : ControllerBase
         var token = await AuthService.LoginAsync(loginDto);
         return token;
     }
+
+    [HttpPost("refresh-token")]
+    public async Task<LoginResponseDto> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDto)
+    {
+        var token = await AuthService.RefreshTokenAsync(refreshTokenRequestDto);
+        return token;
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(RefreshTokenRequestDto refreshTokenRequestDto)
+    {
+        await AuthService.LogoutAsync(refreshTokenRequestDto);
+        return Ok(new { message = "Logged out successfully." });
+    }
 }
