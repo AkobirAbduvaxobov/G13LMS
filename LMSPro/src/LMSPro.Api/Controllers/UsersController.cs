@@ -1,4 +1,5 @@
 ﻿using LMSPro.Api.Dtos;
+using LMSPro.Api.Entities;
 using LMSPro.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,5 +24,12 @@ public class UsersController : ControllerBase
     {
         var users = await UserService.GetAllAsync();
         return users;
+    }
+
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    [HttpPut("set-role/{userId}")]
+    public async Task SetRole(long userId, UserRole userRole)
+    {
+        await UserService.SetRoleAsync(userId, userRole);
     }
 }

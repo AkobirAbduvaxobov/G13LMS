@@ -8,10 +8,12 @@ namespace LMSPro.Api.Services;
 public class UserService : IUserService
 {
     private readonly IBaseRepository<User> UserRepository;
+    private readonly ICurrentUserService CurrentUserService;
 
-    public UserService(IBaseRepository<User> userRepository)
+    public UserService(IBaseRepository<User> userRepository, ICurrentUserService currentUserService)
     {
         UserRepository = userRepository;
+        CurrentUserService = currentUserService;
     }
 
     public Task DeleteAsync(long userId)
@@ -43,9 +45,37 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task SetRoleAsync(long userId, UserRole userRole)
+    public async Task SetRoleAsync(long userId, UserRole userRole)
     {
-        throw new NotImplementedException();
+        var user = await UserRepository.GetAllQuery()
+                                .FirstOrDefaultAsync(u => u.UserId == userId);
+        if (user == null)
+        {
+            throw new KeyNotFoundException($"User with ID {userId} not found.");
+        }
+
+        if(user.UserId == CurrentUserService.UserId)
+        {
+            throw new UnauthorizedAccessException("User can not change yourself");
+        }
+
+
+        if (CurrentUserService.Role == UserRole.SuperAdmin)
+        {
+            user.Role = userRole;
+        }
+        else if(CurrentUserService.Role == UserRole.Admin 
+            && (userRole == UserRole.Teacher || userRole == UserRole.Student)
+            && (user.Role == UserRole.Teacher || user.Role == UserRole.Student))
+        {
+            user.Role = userRole;
+        }
+        else
+        {
+            throw new UnauthorizedAccessException("You do not have permission to change this user's role.");
+        }
+
+        await UserRepository.SaveChangesAsync();
     }
 
     public Task UpdateAsync(long userId, UserUpdateDto userUpdateDto)
