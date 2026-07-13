@@ -62,6 +62,7 @@ public class Program
         app.UseOutputCache();
 
         app.UseMiddleware<ExceptionMiddleware>();
+        app.UseMiddleware<RequestMethodMiddleware>();
         app.UseRequestLogging();
 
         app.MapHealthChecks("/health", new HealthCheckOptions
